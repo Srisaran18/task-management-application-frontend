@@ -43,7 +43,7 @@ const SidebarLayout = () => {
   const onLogout = () => {
     handleClose();
     logout();
-    navigate("/login");
+    navigate("/login", { state: { loggedOut: true } });
   };
 
   const toggleMobileDrawer = () => setMobileOpen(v => !v);

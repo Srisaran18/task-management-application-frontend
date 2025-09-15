@@ -1,22 +1,23 @@
 // src/pages/Login.js
 import React, { useState } from "react";
-import { Box, Button, Container, TextField, Typography, Link, Checkbox, FormControlLabel, Divider, Card, CardContent } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Link, Divider, Card, CardContent, CircularProgress } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import API_BASE from "../Config";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router-dom";
 
 const Login = () => {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loginSuccess, setLoginSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -46,6 +47,7 @@ const Login = () => {
         password: password
       };
       try {
+        setLoading(true);
         const response = await fetch(`${API_BASE}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -61,6 +63,8 @@ const Login = () => {
         }
       } catch (err) {
         setLoginError("Server error. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -99,10 +103,13 @@ const Login = () => {
             <Typography variant="h5" sx={{ color: 'white', fontWeight: 'bold' }}>Task Manager</Typography>
           </Box>
 
-          <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 3 }}>
+          <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
             Sign in
           </Typography>
           
+          {(location.state?.loggedOut) && (
+            <Typography color="success" variant="body2" sx={{ mb: 2, color: '#10b981' }}>You have been logged out.</Typography>
+          )}
           {loginError && (
             <Typography color="error" variant="body2" sx={{ mb: 2, color: '#ef4444' }}>{loginError}</Typography>
           )}
@@ -159,20 +166,7 @@ const Login = () => {
               />
             </Box>
 
-            <FormControlLabel
-              control={
-                <Checkbox 
-                  checked={rememberMe}
-                  onChange={e => setRememberMe(e.target.checked)}
-                  sx={{ 
-                    color: '#64748b',
-                    '&.Mui-checked': { color: '#3b82f6' }
-                  }}
-                />
-              }
-              label={<Typography sx={{ color: 'white', fontSize: '14px' }}>Remember me</Typography>}
-              sx={{ mb: 2 }}
-            />
+            {/* Remember me removed as requested */}
 
             <Button 
               fullWidth 
@@ -186,8 +180,9 @@ const Login = () => {
                 py: 1.5,
                 '&:hover': { backgroundColor: '#f1f5f9' }
               }}
+              disabled={loading}
             >
-              Sign in
+              {loading ? <CircularProgress size={22} sx={{ color: '#1e293b' }} /> : 'Sign in'}
             </Button>
 
             <Divider sx={{ mb: 3, '&::before, &::after': { borderColor: '#475569' } }}>

@@ -7,6 +7,7 @@ import SidebarLayout from "./components/SidebarLayout";
 import Home from "./pages/Home";
 import TasksList from "./pages/TasksList";
 import TaskEditor from "./pages/TaskEditor";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/tasks/list" element={<TasksList/>} />
         <Route path="/tasks/new" element={<TaskEditor/>} />
       </Route>
+      <Route path="*" element={<NotFound/>} />
     </Routes>
   );
 }

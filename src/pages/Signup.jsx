@@ -1,6 +1,6 @@
 // src/pages/Signup.js
 import React, { useState } from "react";
-import { Box, Button, Container, TextField, Typography, Link, Divider, Card, CardContent } from "@mui/material";
+import { Box, Button, Container, TextField, Typography, Link, Divider, Card, CardContent, CircularProgress } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
 import API_BASE from "../Config";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
@@ -20,6 +20,7 @@ const Signup = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [signupError, setSignupError] = useState("");
   const [signupSuccess, setSignupSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -58,6 +59,7 @@ const Signup = () => {
     }
 
     if (isValid) {
+      setLoading(true);
       const userData = {
         name: name,
         email: email,
@@ -71,14 +73,16 @@ const Signup = () => {
         });
         const result = await response.json();
         if (response.ok) {
-          setSignupSuccess("Registered successfully! Redirecting to dashboard...");
-          setAuth(result.user, result.token);
-          setTimeout(() => navigate("/"), 1500);
+          setSignupSuccess("Registered successfully! Redirecting to login...");
+          // do not auto-login; send user to login page
+          setTimeout(() => navigate("/login"), 1200);
         } else {
           setSignupError(result.message || "Registration failed");
         }
       } catch (err) {
         setSignupError("Server error. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -117,7 +121,7 @@ const Signup = () => {
             <Typography variant="h5" sx={{ color: 'white', fontWeight: 'bold' }}>Task Manager</Typography>
           </Box>
 
-          <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 3 }}>
+          <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
             Sign up
           </Typography>
           
@@ -236,8 +240,9 @@ const Signup = () => {
                 py: 1.5,
                 '&:hover': { backgroundColor: '#f1f5f9' }
               }}
+              disabled={loading}
             >
-              Create account
+              {loading ? <CircularProgress size={22} sx={{ color: '#1e293b' }} /> : 'Create account'}
             </Button>
 
             <Divider sx={{ mb: 3, '&::before, &::after': { borderColor: '#475569' } }}>

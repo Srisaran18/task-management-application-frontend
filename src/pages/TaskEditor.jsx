@@ -56,7 +56,7 @@ const TaskEditor = () => {
       borderRadius: 2
     }}>
       <Container maxWidth="sm">
-        <Typography variant="h6" mb={2} sx={{ color: 'white' }}>{editing ? "Edit Task" : "Add Task"}</Typography>
+        <Typography variant="h5" mb={2} sx={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>{editing ? "Edit Task" : "Add Task"}</Typography>
         {error && <Typography color="error" variant="body2" sx={{ mb: 1 }}>{error}</Typography>}
         <Box component="form" onSubmit={submit}>
           <TextField 

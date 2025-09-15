@@ -36,6 +36,9 @@ const TasksList = () => {
       p: { xs: 1.5, sm: 2, md: 3 },
       borderRadius: { xs: 0, sm: 1, md: 2 }
     }}>
+      <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold', mb: 3, textAlign: 'center' }}>
+        Task Lists
+      </Typography>
       {error && <Typography color="error" variant="body2" sx={{ mb: 2 }}>{error}</Typography>}
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1.5 }}>
@@ -72,16 +75,17 @@ const TasksList = () => {
               <TableCell sx={{ color: 'white', fontWeight: 600 }}>Task</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 600 }}>Description</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 600 }}>Status</TableCell>
+              <TableCell sx={{ color: 'white', fontWeight: 600 }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} align="center" sx={{ color: 'white' }}>Loading...</TableCell>
+                <TableCell colSpan={5} align="center" sx={{ color: 'white' }}>Loading...</TableCell>
               </TableRow>
             ) : tasks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} align="center" sx={{ color: 'white' }}>No tasks</TableCell>
+                <TableCell colSpan={5} align="center" sx={{ color: 'white' }}>No tasks</TableCell>
               </TableRow>
             ) : (
               tasks
@@ -104,8 +108,6 @@ const TasksList = () => {
                   <TableRow
                     key={t._id}
                     hover
-                    onClick={() => setSelected(t)}
-                    style={{ cursor: 'pointer' }}
                     sx={{ '& td': { py: 1.5 } }}
                   >
                     <TableCell sx={{ color: 'white', width: 72 }}>{index + 1}</TableCell>
@@ -127,6 +129,16 @@ const TasksList = () => {
                       >
                         {t.status}
                       </Box>
+                    </TableCell>
+                    <TableCell sx={{ color: 'white', width: 120 }}>
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        onClick={() => setSelected(t)}
+                        sx={{ borderColor: '#64748b', color: 'white', textTransform: 'none' }}
+                      >
+                        View
+                      </Button>
                     </TableCell>
                   </TableRow>
                 );
@@ -155,6 +167,32 @@ const TasksList = () => {
             }}
           >
             Edit
+          </Button>
+          <Button 
+            variant="outlined"
+            onClick={async () => {
+              if (!selected) return;
+              const confirmed = window.confirm('Delete this task?');
+              if (!confirmed) return;
+              try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`${API_BASE}/tasks/${selected._id}`, {
+                  method: 'DELETE',
+                  headers: { Authorization: token ? `Bearer ${token}` : undefined }
+                });
+                if (!res.ok) {
+                  const data = await res.json().catch(() => ({}));
+                  throw new Error(data?.message || 'Delete failed');
+                }
+                setSelected(null);
+                load();
+              } catch (err) {
+                alert(err.message);
+              }
+            }}
+            sx={{ borderColor: '#64748b', color: 'white' }}
+          >
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
