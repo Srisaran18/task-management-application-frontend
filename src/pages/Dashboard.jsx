@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Typography, Container, Button, Select, MenuItem, Stack
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { API_BASE } from "../Config";
+import API_BASE from "../Config";
 import { useAuth } from "../context/AuthContext";
 import TaskFormDialog from "./TaskFormDialog";
 

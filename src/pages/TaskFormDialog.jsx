@@ -1,7 +1,7 @@
 // src/pages/TaskFormDialog.js
 import React, { useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Typography } from "@mui/material";
-import { API_BASE } from "../Config";
+import API_BASE from "../Config";
 
 const statuses = ["Pending", "In Progress", "Completed"];
 

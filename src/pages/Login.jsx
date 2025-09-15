@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Box, Button, Container, TextField, Typography, Link } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
-import { API_BASE } from "../Config";
+import API_BASE from "../Config";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
