@@ -1,4 +1,3 @@
-// src/pages/Login.js
 import React, { useState } from "react";
 import { Box, Button, Container, TextField, Typography, Link, Divider, Card, CardContent, CircularProgress } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
