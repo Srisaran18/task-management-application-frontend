@@ -139,8 +139,8 @@ const TasksList = () => {
       <Dialog open={!!selected} onClose={() => setSelected(null)} fullWidth maxWidth="sm">
         <DialogTitle sx={{ backgroundColor: '#1e293b', color: 'white' }}>Task Details</DialogTitle>
         <DialogContent sx={{ backgroundColor: '#1e293b' }}>
-          <Typography variant="subtitle1" fontWeight={600} sx={{ color: 'white' }}>{selected?.title}</Typography>
-          <Typography variant="body2" sx={{ mt: 1, color: 'white' }}>{selected?.description}</Typography>
+          <Typography variant="subtitle1" fontWeight={600} sx={{ color: 'white' }}>Task: {selected?.title}</Typography>
+          <Typography variant="body2" sx={{ mt: 1, color: 'white' }}>Description: {selected?.description}</Typography>
           <Typography variant="body2" sx={{ mt: 1, color: 'white' }}>Status: {selected?.status}</Typography>
         </DialogContent>
         <DialogActions sx={{ backgroundColor: '#1e293b' }}>
