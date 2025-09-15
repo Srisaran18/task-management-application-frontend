@@ -32,14 +32,15 @@ const TasksList = () => {
     <Box sx={{ 
       minHeight: '100vh', 
       background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      p: 3,
-      borderRadius: 2
+      p: { xs: 1.5, sm: 2, md: 3 },
+      borderRadius: { xs: 0, sm: 1, md: 2 }
     }}>
       {error && <Typography color="error" variant="body2" sx={{ mb: 2 }}>{error}</Typography>}
-      <Paper sx={{ backgroundColor: '#1e293b', color: 'white' }}>
-        <Table size="small">
+      <Paper sx={{ backgroundColor: '#1e293b', color: 'white', overflowX: 'auto' }}>
+        <Table size="small" sx={{ minWidth: 600 }}>
           <TableHead sx={{ backgroundColor: '#334155' }}>
-            <TableRow>
+            <TableRow sx={{ '& th': { py: 1.5 } }}>
+              <TableCell sx={{ color: 'white', fontWeight: 600 }}>S.no</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 600 }}>Task</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 600 }}>Description</TableCell>
               <TableCell sx={{ color: 'white', fontWeight: 600 }}>Status</TableCell>
@@ -47,17 +48,56 @@ const TasksList = () => {
           </TableHead>
           <TableBody>
             {loading ? (
-              <TableRow><TableCell colSpan={3} align="center" sx={{ color: 'white' }}>Loading...</TableCell></TableRow>
+              <TableRow>
+                <TableCell colSpan={4} align="center" sx={{ color: 'white' }}>Loading...</TableCell>
+              </TableRow>
             ) : tasks.length === 0 ? (
-              <TableRow><TableCell colSpan={3} align="center" sx={{ color: 'white' }}>No tasks</TableCell></TableRow>
+              <TableRow>
+                <TableCell colSpan={4} align="center" sx={{ color: 'white' }}>No tasks</TableCell>
+              </TableRow>
             ) : (
-              tasks.map(t => (
-                <TableRow key={t._id} hover onClick={() => setSelected(t)} style={{ cursor: 'pointer' }}>
-                  <TableCell sx={{ color: 'white' }}>{t.title}</TableCell>
-                  <TableCell sx={{ color: 'white' }}>{t.description}</TableCell>
-                  <TableCell sx={{ color: 'white' }}>{t.status}</TableCell>
-                </TableRow>
-              ))
+              tasks.map((t, index) => {
+                const status = (t.status || '').toLowerCase();
+                const statusStyles =
+                  status === 'pending'
+                    ? { bg: '#fde047', color: '#111827' } // yellow / dark text
+                    : status === 'in progress'
+                    ? { bg: '#60a5fa', color: '#0b1020' } // blue / dark text for readability
+                    : status === 'completed'
+                    ? { bg: '#4ade80', color: '#052e16' } // green / dark text
+                    : { bg: '#94a3b8', color: '#0f172a' }; // fallback slate
+
+                return (
+                  <TableRow
+                    key={t._id}
+                    hover
+                    onClick={() => setSelected(t)}
+                    style={{ cursor: 'pointer' }}
+                    sx={{ '& td': { py: 1.5 } }}
+                  >
+                    <TableCell sx={{ color: 'white', width: 72 }}>{index + 1}</TableCell>
+                    <TableCell sx={{ color: 'white' }}>{t.title}</TableCell>
+                    <TableCell sx={{ color: 'white' }}>{t.description}</TableCell>
+                    <TableCell sx={{ color: 'white' }}>
+                      <Box
+                        component="span"
+                        sx={{
+                          display: 'inline-block',
+                          px: 1.25,
+                          py: 0.25,
+                          borderRadius: 1,
+                          backgroundColor: statusStyles.bg,
+                          color: statusStyles.color,
+                          fontWeight: 600,
+                          textTransform: 'capitalize'
+                        }}
+                      >
+                        {t.status}
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>

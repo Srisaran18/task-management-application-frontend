@@ -2,7 +2,6 @@ import './App.css';
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 import SidebarLayout from "./components/SidebarLayout";
 import Home from "./pages/Home";
@@ -18,7 +17,6 @@ function App() {
         <Route path="/" element={<Home/>} />
         <Route path="/tasks/list" element={<TasksList/>} />
         <Route path="/tasks/new" element={<TaskEditor/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
       </Route>
     </Routes>
   );
