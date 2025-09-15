@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Table, TableHead, TableRow, TableCell, TableBody, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from "@mui/material";
+import { Box, Table, TableHead, TableRow, TableCell, TableBody, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import API_BASE from "../Config";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +8,7 @@ const TasksList = () => {
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const navigate = useNavigate();
 
   const load = async () => {
@@ -36,6 +37,33 @@ const TasksList = () => {
       borderRadius: { xs: 0, sm: 1, md: 2 }
     }}>
       {error && <Typography color="error" variant="body2" sx={{ mb: 2 }}>{error}</Typography>}
+
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1.5 }}>
+        <FormControl size="small" sx={{ minWidth: 180 }}>
+          <InputLabel id="status-filter-label" sx={{ color: 'white' }}>Filter by status</InputLabel>
+          <Select
+            labelId="status-filter-label"
+            id="status-filter"
+            value={statusFilter}
+            label="Filter by status"
+            onChange={(e) => setStatusFilter(e.target.value)}
+            sx={{
+              color: 'white',
+              '.MuiOutlinedInput-notchedOutline': { borderColor: '#334155' },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#475569' },
+              '.MuiSvgIcon-root': { color: 'white' }
+            }}
+            MenuProps={{
+              PaperProps: { sx: { backgroundColor: '#0b1221', color: 'white' } }
+            }}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="in progress">In Progress</MenuItem>
+            <MenuItem value="completed">Completed</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
       <Paper sx={{ backgroundColor: '#1e293b', color: 'white', overflowX: 'auto' }}>
         <Table size="small" sx={{ minWidth: 600 }}>
           <TableHead sx={{ backgroundColor: '#334155' }}>
@@ -56,7 +84,12 @@ const TasksList = () => {
                 <TableCell colSpan={4} align="center" sx={{ color: 'white' }}>No tasks</TableCell>
               </TableRow>
             ) : (
-              tasks.map((t, index) => {
+              tasks
+                .filter(t => {
+                  if (statusFilter === 'all') return true;
+                  return (t.status || '').toLowerCase() === statusFilter;
+                })
+                .map((t, index) => {
                 const status = (t.status || '').toLowerCase();
                 const statusStyles =
                   status === 'pending'
